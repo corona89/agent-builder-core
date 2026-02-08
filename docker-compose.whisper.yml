@@ -1,0 +1,11 @@
+services:
+  whisper-stt:
+    image: whisper-service:latest
+    container_name: whisper-stt
+    restart: always
+    ports:
+      - "8003:8003"
+    environment:
+      - PORT=8003
+    volumes:
+      - ./whisper_models:/root/.cache/whisper
