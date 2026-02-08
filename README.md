@@ -18,6 +18,42 @@ Agent Builder Core는 로컬 LLM(DeepSeek)과 클라우드 LLM(Gemini)을 결합
 - **자동 스크롤 (Smooth Scroll)**: 긴 회의나 대화 중에도 최신 메시지를 놓치지 않도록 실시간 하단 스크롤 기능이 적용되었습니다.
 - **원클릭 요약 기능**: 'Meeting' 타입의 에이전트 시뮬레이션 시, 누적된 대화 내용을 바탕으로 핵심 안건을 자동 요약합니다.
 
+## 🏗️ 시스템 구성도 (Architecture)
+
+### 1. 전체 흐름 (Data Flow)
+```mermaid
+graph TD
+    User((사용자)) -->|음성 입력| FE[Next.js Frontend]
+    FE -->|3s Audio Chunks| STT[Whisper Service]
+    STT -->|FFmpeg 변환 16k WAV| Model[Faster-Whisper base-model]
+    Model -->|Text| STT
+    STT -->|Transcribed Text| FE
+    FE -->|Message + Prompt| BE[FastAPI Backend]
+    BE -->|Query| AI[Gemini / DeepSeek]
+    AI -->|Response| BE
+    BE -->|Final Result| FE
+    FE -->|UI Auto-scroll| User
+```
+
+### 2. 소스 코드 구조 (Project Structure)
+```text
+.
+├── agent-builder/
+│   ├── frontend/         # Next.js 애플리케이션
+│   │   ├── app/          # 페이지 및 레이아웃 (Playground 포함)
+│   │   └── utils.ts      # API 통신 유틸리티
+│   └── backend/          # FastAPI 서버
+│       ├── core/         # 비즈니스 로직 (Use Cases)
+│       ├── adapters/     # DB 및 인증 어댑터
+│       └── models.py     # 데이터베이스 모델
+├── whisper-service/      # AI 음성 인식 서비스
+│   ├── main.py           # FastAPI + Faster-Whisper 로직
+│   ├── Dockerfile        # FFmpeg 포함 빌드 설정
+│   └── requirements.txt
+├── docker-compose.whisper.yml # 인프라 오케스트레이션
+└── README.md             # 프로젝트 문서
+```
+
 ## 🛠️ 기술 스택
 
 - **Frontend**: Next.js 15+, Tailwind CSS, Lucide React
