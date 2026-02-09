@@ -223,8 +223,8 @@ export default function PlaygroundPage() {
   const handleSummarize = async () => {
     if (messages.length === 0 || isSummarizing) return;
     setIsSummarizing(true);
-    try {
-      const res = await fetch(`https://filename-stickers-tied-inflation.trycloudflare.com/apps/summarize`, {
+    try:
+      const res = await fetch(`https://${window.location.hostname === 'localhost' ? 'localhost:8000' : 'your-backend-api.com'}/apps/summarize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ history: messages })
@@ -244,7 +244,7 @@ export default function PlaygroundPage() {
     const token = localStorage.getItem('token');
     if (!token) { router.push('/'); return; }
     try {
-      const appRes = await fetch(`https://filename-stickers-tied-inflation.trycloudflare.com/apps/`, {
+      const appRes = await fetch(`${window.location.origin.replace(':3000', ':8000')}/apps/`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const apps = await appRes.json();
@@ -252,7 +252,7 @@ export default function PlaygroundPage() {
       if (!currentApp) { router.push('/apps'); return; }
       setApp(currentApp);
 
-      const knRes = await fetch('https://filename-stickers-tied-inflation.trycloudflare.com/knowledges/', {
+      const knRes = await fetch(`${window.location.origin.replace(':3000', ':8000')}/knowledges/`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (knRes.ok) setKnowledges(await knRes.json());
@@ -264,7 +264,7 @@ export default function PlaygroundPage() {
 
   const updateApp = async (updates: any) => {
     const token = localStorage.getItem('token');
-    const res = await fetch(`https://filename-stickers-tied-inflation.trycloudflare.com/apps/${id}`, {
+    const res = await fetch(`${window.location.origin.replace(':3000', ':8000')}/apps/${id}`, {
       method: 'PUT',
       headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...app, ...updates })
@@ -287,7 +287,7 @@ export default function PlaygroundPage() {
     setIsSending(true);
 
     try {
-      const res = await fetch(`https://filename-stickers-tied-inflation.trycloudflare.com/apps/${id}/chat`, {
+      const res = await fetch(`${window.location.origin.replace(':3000', ':8000')}/apps/${id}/chat`, {
         method: 'POST',
         headers: { 
           'Authorization': `Bearer ${token}`,
