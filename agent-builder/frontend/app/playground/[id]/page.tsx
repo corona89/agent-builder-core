@@ -223,7 +223,7 @@ export default function PlaygroundPage() {
   const handleSummarize = async () => {
     if (messages.length === 0 || isSummarizing) return;
     setIsSummarizing(true);
-    try:
+    try {
       const res = await fetch(`https://${window.location.hostname === 'localhost' ? 'localhost:8000' : 'your-backend-api.com'}/apps/summarize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
