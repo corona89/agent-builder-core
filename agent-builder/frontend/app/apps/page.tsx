@@ -87,6 +87,7 @@ export default function AppsPage() {
           name: '',
           description: '',
           prompt: '',
+          agent_type: 'general',
           model_id: 'gpt-4o',
           knowledge_id: null,
           mcp_tools: '',
